@@ -1,20 +1,19 @@
 'use client'
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
-import { FaGithub } from "react-icons/fa";
 import CoinSelectBox from '../components/CoinSelectBox'
 import PriceSelectBox from '../components/PriceSelectBox';
 import { CoinType, PriceType } from '@/types';
 import { getCoins } from '@/utils';
 import CoinCard from '@/components/CoinCard';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import Loading from '@/components/Loading';
+import { IoMdRefresh } from "react-icons/io";
 
 const prices = [
   { name: 'USD' },
 ]
 
 export default function Home() {
+  const [loading, setLoading] = useState<boolean>(false)
   const [price, setPrice] = useState<number>(100)
   const [coins, setCoins] = useState<Array<PriceType> | null>(null)
   const [selectedPrice, setSelectedPrice] = useState<PriceType>(prices[0])
@@ -25,8 +24,13 @@ export default function Home() {
   }, [])
 
   const getAllCoins = async () => {
+    if (loading) return null
+    setLoading(true)
     const _coins = await getCoins();
-    setCoins(_coins)
+    if (_coins) {
+      setCoins(_coins)
+    }
+    setLoading(false)
   }
 
   if (!coins || !selectedCoin) return null
@@ -47,17 +51,27 @@ export default function Home() {
               </div>
               {coins && <CoinSelectBox coins={coins} selectedCoin={selectedCoin} setSelectedCoin={setSelectedCoin} />}
             </div>
+            <button onClick={getAllCoins} className='w-full flex justify-center items-center gap-1 md:w-[464px] py-2 bg-slate-800 text-white hover:bg-indigo-500 duration-200 rounded-md shadow-md mt-4'>
+              <IoMdRefresh className={`w-5 h-5 ${loading && 'animate-spin'}`} />
+              {loading ? 'Refreshing' : 'Refresh'}
+            </button>
           </div>
         </div>
-        <div className="flex flex-col items-center gap-4 mt-10 py-10">
-          {selectedCoin.name ? (
-            <CoinCard key={selectedCoin.name} coin={selectedCoin} price={price} />
-          ) : (
-            coins && coins.map((coin: any) => (
-              <CoinCard key={coin.name} coin={coin} price={price} />
-            ))
-          )}
-        </div>
+        {loading ? (
+          <div className='py-10'>
+            <Loading />
+          </div>
+        ) : (
+          <div className="flex flex-col items-center gap-4 my-4">
+            {selectedCoin.name ? (
+              <CoinCard key={selectedCoin.name} coin={selectedCoin} price={price} />
+            ) : (
+              coins && coins.map((coin: any) => (
+                <CoinCard key={coin.name} coin={coin} price={price} />
+              ))
+            )}
+          </div>
+        )}
       </div>
     </main>
   )
