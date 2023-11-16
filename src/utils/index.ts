@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const options = {
     method: 'GET',
-    url: process.env.RAPID_URL,
+    url: 'https://coinranking1.p.rapidapi.com/coins',
     params: {
         referenceCurrencyUuid: 'yhjMzLPhuIDl',
         timePeriod: '24h',
@@ -13,12 +13,13 @@ const options = {
         offset: '0'
     },
     headers: {
-        'X-RapidAPI-Key': process.env.RAPID_KEY,
-        'X-RapidAPI-Host': process.env.RAPID_HOST
+        'X-RapidAPI-Key': 'd9fcbe7ed7mshc7d16cbb7c1a734p1c585ejsnda238d464973',
+        'X-RapidAPI-Host': 'coinranking1.p.rapidapi.com'
     }
 };
 
 export const getCoins = async () => {
+
     try {
         const response = await axios.request(options);
         console.log(response.data);
