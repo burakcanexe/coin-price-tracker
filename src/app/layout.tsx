@@ -7,8 +7,8 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Coin Price Tracker',
-  description: 'with Burak Can Yıldırım',
+  title: 'Coin Price Tracker - Burak Can Yıldırım',
+  description: 'Free crypto coin price tracker',
 }
 
 export default function RootLayout({
